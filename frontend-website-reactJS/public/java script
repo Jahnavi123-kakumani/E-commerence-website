@@ -1,0 +1,78 @@
+// Full-Stack E-Commerce Boilerplate
+
+// server/index.js (Node + Express Backend)
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const app = express();
+require('dotenv').config();
+
+app.use(cors());
+app.use(express.json());
+
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error(err));
+
+// Basic route
+app.get('/', (req, res) => {
+  res.send('E-commerce API Running');
+});
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
+// client/src/App.js (React Frontend)
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
+import ProductPage from './pages/ProductPage';
+import Cart from './pages/Cart';
+import Login from './pages/Login';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/product/:id' element={<ProductPage />} />
+        <Route path='/cart' element={<Cart />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+// client/src/pages/Home.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/products')
+      .then(res => setProducts(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
+  return (
+    <div>
+      <h1>Product Listings</h1>
+      <ul>
+        {products.map(product => (
+          <li key={product._id}>{product.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Home;
