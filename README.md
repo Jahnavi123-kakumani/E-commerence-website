@@ -26,5 +26,4 @@ Mobile Responsive
 
 If you want to contribute to this project and make it better, your help is very welcome. Create a pull request with your proposed changes, and we will review it as soon as possible.
 
-Happy coding! 🚀
-@SiddheshKukade
+Happy coding! 
